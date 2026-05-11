@@ -1,0 +1,82 @@
+# pair-extraordinaire
+
+A small automation tool that generates co-authored pull requests to help earn the GitHub **Pair Extraordinaire** achievement.
+
+## What it does
+
+The script repeatedly:
+
+1. Creates a feature branch
+2. Appends a row to [`sessions.md`](./sessions.md)
+3. Commits it with a `Co-authored-by:` trailer so both parties receive credit
+4. Opens a pull request and immediately merges it
+
+Each merged PR with a valid co-author trailer counts toward the badge.
+
+## Prerequisites
+
+| Tool | Purpose |
+|------|---------|
+| `git` | version control |
+| [`gh`](https://cli.github.com/) | GitHub CLI — create & merge PRs |
+| `bash` 4+ | script runtime |
+
+Authenticate the GitHub CLI before running:
+
+```sh
+gh auth login
+```
+
+## Usage
+
+```sh
+# clone the repo and enter it
+git clone https://github.com/<your-username>/pair-extraordinaire
+cd pair-extraordinaire
+
+# make the script executable
+chmod +x pair.sh
+
+# run with default settings (48 PRs, co-author: Shion1305)
+./pair.sh
+
+# run a different number of PRs
+./pair.sh 10
+```
+
+### Environment variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `COAUTHOR_NAME` | `Shion1305` | GitHub username of the co-author |
+| `COAUTHOR_ID` | `20254962` | Numeric GitHub user ID of the co-author |
+| `SLEEP_SEC` | `2` | Seconds to sleep between PRs (avoid rate limits) |
+
+Example — use a different co-author:
+
+```sh
+COAUTHOR_NAME=octocat COAUTHOR_ID=583231 ./pair.sh 5
+```
+
+## How GitHub counts the badge
+
+GitHub awards **Pair Extraordinaire** when you co-author commits that land in merged pull requests.  
+Both the commit author and every `Co-authored-by:` party receive credit.
+
+Badge tiers (as of 2025):
+
+| Tier | PRs required |
+|------|-------------|
+| Bronze | 1 |
+| Silver | 10 |
+| Gold | 24 |
+
+Running `./pair.sh 48` comfortably exceeds the gold tier and leaves room for future tier changes.
+
+## Session log
+
+Merged sessions are tracked in [`sessions.md`](./sessions.md).
+
+## License
+
+[MIT](LICENSE)

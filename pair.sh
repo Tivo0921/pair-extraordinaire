@@ -74,7 +74,7 @@ for i in $(seq "$START" "$END"); do
     --base main \
     --head "$BRANCH")
 
-  gh pr merge "$PR_URL" --merge --delete-branch --quiet
+  gh pr merge "$PR_URL" --merge --delete-branch
 
   printf "       ✓ merged %s\n" "$PR_URL"
 

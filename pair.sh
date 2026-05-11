@@ -5,8 +5,8 @@ set -euo pipefail
 # pair.sh — automate co-authored PRs to earn the Pair Extraordinaire badge
 # ---------------------------------------------------------------------------
 
-COAUTHOR_NAME="${COAUTHOR_NAME:-Shion1305}"
-COAUTHOR_EMAIL="${COAUTHOR_EMAIL:-shion1305@gmail.com}"
+COAUTHOR_NAME="${COAUTHOR_NAME:-Tivo0921}"
+COAUTHOR_EMAIL="${COAUTHOR_EMAIL:-shun020921@icloud.com}"
 TOTAL="${1:-48}"
 SLEEP_SEC="${SLEEP_SEC:-2}"
 
@@ -14,7 +14,9 @@ SLEEP_SEC="${SLEEP_SEC:-2}"
 REPO_ROOT=$(git rev-parse --show-toplevel)
 REPO_NAME=$(basename "$REPO_ROOT")
 AUTHOR_LOGIN=$(gh api user --jq '.login')
-AUTHOR_EMAIL="${AUTHOR_EMAIL:-shun020921@icloud.com}"
+AUTHOR_ID=$(gh api user --jq '.id')
+# prefer explicit AUTHOR_EMAIL, fall back to GitHub noreply so any user works
+AUTHOR_EMAIL="${AUTHOR_EMAIL:-${AUTHOR_ID}+${AUTHOR_LOGIN}@users.noreply.github.com}"
 
 git -C "$REPO_ROOT" config user.name  "$AUTHOR_LOGIN"
 git -C "$REPO_ROOT" config user.email "$AUTHOR_EMAIL"

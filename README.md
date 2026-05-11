@@ -49,13 +49,14 @@ chmod +x pair.sh
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `COAUTHOR_NAME` | `Shion1305` | GitHub username of the co-author |
-| `COAUTHOR_ID` | `20254962` | Numeric GitHub user ID of the co-author |
+| `COAUTHOR_EMAIL` | `shion1305@gmail.com` | Email of the co-author |
+| `AUTHOR_EMAIL` | `shun020921@icloud.com` | Email of the commit author |
 | `SLEEP_SEC` | `2` | Seconds to sleep between PRs (avoid rate limits) |
 
 Example — use a different co-author:
 
 ```sh
-COAUTHOR_NAME=octocat COAUTHOR_ID=583231 ./pair.sh 5
+COAUTHOR_NAME=octocat COAUTHOR_EMAIL=octocat@github.com ./pair.sh 5
 ```
 
 ## How GitHub counts the badge

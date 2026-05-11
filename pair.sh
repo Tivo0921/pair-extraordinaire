@@ -6,8 +6,7 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 
 COAUTHOR_NAME="${COAUTHOR_NAME:-Shion1305}"
-COAUTHOR_ID="${COAUTHOR_ID:-20254962}"
-COAUTHOR_EMAIL="${COAUTHOR_ID}+${COAUTHOR_NAME}@users.noreply.github.com"
+COAUTHOR_EMAIL="${COAUTHOR_EMAIL:-shion1305@gmail.com}"
 TOTAL="${1:-48}"
 SLEEP_SEC="${SLEEP_SEC:-2}"
 
@@ -15,8 +14,7 @@ SLEEP_SEC="${SLEEP_SEC:-2}"
 REPO_ROOT=$(git rev-parse --show-toplevel)
 REPO_NAME=$(basename "$REPO_ROOT")
 AUTHOR_LOGIN=$(gh api user --jq '.login')
-AUTHOR_ID=$(gh api user --jq '.id')
-AUTHOR_EMAIL="${AUTHOR_ID}+${AUTHOR_LOGIN}@users.noreply.github.com"
+AUTHOR_EMAIL="${AUTHOR_EMAIL:-shun020921@icloud.com}"
 
 git -C "$REPO_ROOT" config user.name  "$AUTHOR_LOGIN"
 git -C "$REPO_ROOT" config user.email "$AUTHOR_EMAIL"
@@ -37,13 +35,20 @@ if [ ! -f "$SESSIONS_FILE" ]; then
     > "$SESSIONS_FILE"
 fi
 
+# ---- determine start index (resume-safe) -----------------------------------
+EXISTING=$(grep -c '^|' "$SESSIONS_FILE" 2>/dev/null || echo 0)
+# subtract header separator row
+EXISTING=$(( EXISTING > 1 ? EXISTING - 1 : 0 ))
+START=$(( EXISTING + 1 ))
+END=$(( EXISTING + TOTAL ))
+
 # ---- main loop -------------------------------------------------------------
-for i in $(seq 1 "$TOTAL"); do
+for i in $(seq "$START" "$END"); do
   PADDED=$(printf '%03d' "$i")
   BRANCH="pair/session-${PADDED}"
   TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-  printf "[%s/%s] branch: %s\n" "$i" "$TOTAL" "$BRANCH"
+  printf "[%s/%s] branch: %s\n" "$(( i - START + 1 ))" "$TOTAL" "$BRANCH"
 
   git -C "$REPO_ROOT" checkout main        --quiet
   git -C "$REPO_ROOT" pull   origin main   --quiet
@@ -69,7 +74,7 @@ for i in $(seq 1 "$TOTAL"); do
     --base main \
     --head "$BRANCH")
 
-  gh pr merge "$PR_URL" --merge --delete-branch --yes --quiet
+  gh pr merge "$PR_URL" --merge --delete-branch --quiet
 
   printf "       ✓ merged %s\n" "$PR_URL"
 
